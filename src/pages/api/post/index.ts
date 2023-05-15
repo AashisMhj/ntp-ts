@@ -1,14 +1,31 @@
-import {NextApiRequest, NextApiResponse} from 'next'
-import {PrismaClient} from '@prisma/client';
-const client = new PrismaClient();
+import {NextApiRequest, NextApiResponse} from 'next';
+import {PrismaClient} from '@prisma/client'
+
+const prisma = new PrismaClient();
 
 export default async function handler(req:NextApiRequest, res:NextApiResponse){
-    console.log('here')
     if(req.method === 'GET'){
-        const posts = await client.post.findMany({
-            where: {published: true}
-        });
-        return res.status(200).json(posts)
-    }
+        let {page,offset=10}= req.query;
 
+        const posts = await prisma.post.findMany({
+            where: {published: true},
+            skip: 0,
+            take: 10,
+            orderBy: {
+                title: 'desc'
+            }
+        });
+
+        
+        return res.status(200).json({
+            msg: 'Success',
+            data: posts
+        })
+    }
+    if(req.method === 'POST'){
+        const data = req.body;
+        return res.status(200).json({
+            msg: 'Success'
+        })
+    }
 }
