@@ -1,1 +1,0 @@
-export {default as PostSection} from './posts-section'
